@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jessica 心靈瑜珈｜LINE OA AI 預約客服 產品原型</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sage:#6F8F72; --sage-d:#4F6B53; --sage-l:#E8EFE6;
+  --sand:#F6F1EA; --terra:#C9826B; --terra-l:#F8E9E3;
+  --ink:#2A2F2B; --sub:#7A817B; --line:#E7E2DA;
+  --chat:#BFD0E3; --me:#A6E57A; --anno:#4FA3F7;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Noto Sans TC","PingFang TC",sans-serif;background:#E9EBEE;color:var(--ink)}
+button{font-family:inherit;cursor:pointer}
+
+/* ===== tool chrome ===== */
+.toolbar{position:sticky;top:0;z-index:50;height:52px;background:#2C2C2C;color:#EDEDED;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:14px}
+.toolbar b{font-weight:500}
+.badge{background:#3D3D3D;border-radius:6px;padding:4px 10px;font-size:12px;color:#BDBDBD;margin-left:10px}
+.tbtn{background:#0D99FF;color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:13px;margin-left:8px}
+.tbtn.ghost{background:transparent;border:1px solid #4A4A4A;color:#D0D0D0}
+.canvas{min-height:calc(100vh - 52px);padding:48px 40px 96px;background-image:radial-gradient(#C9CDD3 1px,transparent 1px);background-size:16px 16px;display:flex;gap:32px;justify-content:center;align-items:flex-start}
+.flow{display:flex;gap:28px;align-items:flex-start}
+.step{display:flex;flex-direction:column;align-items:center;gap:12px}
+.step-label{align-self:flex-start;font-size:13px;color:#5B6470;display:flex;gap:8px;align-items:center}
+.step-label .num{background:#0D99FF;color:#fff;border-radius:4px;padding:2px 8px;font-weight:700}
+.arrow{align-self:center;margin-top:-40px;font-size:28px;color:#9AA3AE}
+.grid-tag{font-size:12px;color:var(--anno)}
+
+/* ===== phone ===== */
+.phone{width:372px;height:780px;background:#111;border-radius:52px;padding:11px;box-shadow:0 24px 60px rgba(0,0,0,.18);position:relative;transition:box-shadow .3s}
+.phone.focus{box-shadow:0 0 0 4px #0D99FF,0 24px 60px rgba(0,0,0,.18)}
+.screen{width:100%;height:100%;border-radius:42px;overflow:hidden;background:var(--chat);display:flex;flex-direction:column;position:relative}
+.island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:110px;height:30px;background:#111;border-radius:16px;z-index:3}
+.status{height:46px;background:#fff;display:flex;justify-content:space-between;align-items:flex-end;padding:0 26px 6px;font-size:14px;font-weight:700}
+.status span:last-child{font-size:12px;letter-spacing:1px}
+.header{height:52px;background:#fff;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid #E6E6E6}
+.header .back{font-size:22px;color:#333}
+.oa{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--sage),#9DB89F);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px}
+.header h4{font-size:15px;font-weight:700;line-height:1.2}
+.header small{display:block;font-size:11px;color:var(--sub);font-weight:400}
+.header .ai-chip{margin-left:auto;font-size:10px;background:var(--sage-l);color:var(--sage-d);padding:3px 8px;border-radius:999px;font-weight:700}
+.chat{flex:1;overflow-y:auto;padding:14px 16px 16px 12px;display:flex;flex-direction:column;gap:12px;scrollbar-width:none}
+.chat::-webkit-scrollbar{display:none}
+.time{align-self:center;font-size:11px;color:#fff;background:rgba(0,0,0,.18);padding:2px 10px;border-radius:999px}
+.msg{display:flex;gap:8px;align-items:flex-start;max-width:100%}
+.msg.me{justify-content:flex-end}
+.av{flex:none;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--sage),#9DB89F);display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff}
+.bub{background:#fff;border-radius:16px;padding:10px 13px;font-size:14px;line-height:1.6;max-width:250px;box-shadow:0 1px 1px rgba(0,0,0,.04)}
+.me .bub{background:var(--me)}
+.name{font-size:11px;color:#46566B;margin-bottom:3px}
+.read{font-size:10px;color:#46566B;align-self:flex-end;margin-right:4px;text-align:right;line-height:1.3}
+.price{font-weight:900;color:var(--terra)}
+
+/* flex card */
+.flex{background:#fff;border-radius:16px;overflow:visible;width:262px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.flex-hero{height:60px;border-radius:16px 16px 0 0;background:linear-gradient(120deg,#D9E4D6,#F3E6DA);display:flex;align-items:center;gap:12px;padding:0 16px}
+.flex-hero .lotus{font-size:30px}
+.flex-hero b{font-size:15px;color:var(--sage-d)}
+.flex-hero small{display:block;font-size:11px;color:var(--sub);font-weight:400}
+.flex-body{padding:12px 14px 14px}
+.flex-body p{font-size:12px;color:var(--sub);margin-bottom:10px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fbtn{border:1px solid var(--line);background:var(--sand);border-radius:12px;padding:8px 4px;font-size:12px;white-space:nowrap;font-weight:700;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:4px;transition:.15s}
+.fbtn i{font-style:normal;font-size:18px}
+.fbtn:hover{border-color:var(--sage);background:var(--sage-l)}
+.fbtn.primary{background:var(--sage);color:#fff;border-color:var(--sage)}
+.fbtn.primary:hover{background:var(--sage-d)}
+
+/* slot picker */
+.days{display:flex;gap:6px;margin-bottom:12px}
+.day{flex:1;border:1px solid var(--line);border-radius:12px;padding:6px 0;text-align:center;font-size:11px;color:var(--sub);background:#fff}
+.day b{display:block;font-size:15px;color:var(--ink)}
+.day.on{background:var(--sage);border-color:var(--sage);color:#E8EFE6}
+.day.on b{color:#fff}
+.slots{display:flex;flex-direction:column;gap:8px}
+.slot{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;background:#fff;transition:.15s}
+.slot b{font-size:15px}
+.slot small{color:var(--sub);font-size:11px}
+.slot.on{border:2px solid var(--sage);background:var(--sage-l)}
+.slot.full{opacity:.45}
+.slot .tag{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--sage-l);color:var(--sage-d);font-weight:700}
+.slot.full .tag{background:#EEE;color:#888}
+.cta{margin-top:12px;width:100%;height:44px;border:none;border-radius:999px;background:var(--sage);color:#fff;font-size:14px;font-weight:700}
+.cta:active{transform:scale(.98)}
+
+/* success */
+.ok-head{border-radius:16px 16px 0 0;background:linear-gradient(120deg,var(--sage),#8FAE92);color:#fff;padding:16px;display:flex;align-items:center;gap:12px}
+.ok-head .check{width:40px;height:40px;border-radius:50%;background:#fff;color:var(--sage);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900}
+.ok-head b{font-size:16px}
+.ok-head small{display:block;font-size:11px;opacity:.9}
+.kv{display:flex;justify-content:space-between;font-size:13px;padding:7px 0;border-bottom:1px dashed var(--line)}
+.kv span:first-child{color:var(--sub)}
+.kv b{font-weight:700;text-align:right}
+.sync{margin-top:10px;background:var(--sage-l);color:var(--sage-d);border-radius:10px;padding:8px 10px;font-size:12px;font-weight:700;display:flex;gap:6px;align-items:center}
+.tip{margin-top:8px;background:var(--terra-l);color:#9A5743;border-radius:10px;padding:8px 10px;font-size:12px;line-height:1.5}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.ghost{height:40px;border:1px solid var(--line);background:#fff;border-radius:999px;font-size:13px;font-weight:700;color:var(--ink)}
+
+/* input + rich menu */
+.input{height:50px;background:#fff;display:flex;align-items:center;gap:10px;padding:0 12px;border-top:1px solid #E6E6E6;font-size:18px;color:#8C8C8C}
+.input .box{flex:1;height:34px;border-radius:17px;background:#F2F2F2;font-size:13px;display:flex;align-items:center;padding:0 12px;color:#A0A0A0}
+.rich{background:#fff;border-top:1px solid #EEE;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 6px 22px}
+.rich div{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;color:var(--ink);font-weight:500}
+.rich i{font-style:normal;font-size:20px}
+.typing{display:inline-flex;gap:4px}
+.typing span{width:6px;height:6px;border-radius:50%;background:#B5BDB6;animation:b 1s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes b{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+
+.marker{position:absolute;width:24px;height:24px;border-radius:50%;background:#E53935;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px #fff;z-index:6}
+
+/* notes */
+.notes{width:290px;background:#fff;border-radius:12px;padding:20px;font-size:13px;line-height:1.7;box-shadow:0 2px 8px rgba(0,0,0,.06);position:sticky;top:84px}
+.notes h4{font-size:14px;margin-bottom:10px}
+.notes .row{display:flex;gap:8px;margin-bottom:10px}
+.pin{flex:none;width:22px;height:22px;border-radius:50%;background:#E53935;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.notes .sec{margin-top:12px;padding-top:12px;border-top:1px solid #EEE}
+.sw{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:6px;border:1px solid rgba(0,0,0,.08)}
+.warn{color:#B5611B}
+
+.toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%) translateY(20px);background:#2C2C2C;color:#fff;padding:12px 20px;border-radius:12px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;z-index:99}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div>🗂 <b>Jessica 心靈瑜珈 – LINE OA AI 預約客服 Prototype v1.0</b><span class="badge">Hi-Fi · 3 Steps</span></div>
+  <div>
+    <button class="tbtn ghost" id="replay">▶ 重播流程</button>
+    <button class="tbtn" id="annoBtn">標註：開</button>
+  </div>
+</div>
+
+<div class="canvas">
+  <div class="flow">
+
+    <!-- ===== Step 1 ===== -->
+    <div class="step">
+      <div class="step-label"><span class="num">1</span> 諮詢回覆＋服務選單 <span class="grid-tag">8pt Grid</span></div>
+      <div class="phone" id="p1">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>14:02</span><span>●●● 📶 🔋</span></div>
+          <div class="header"><span class="back">‹</span><div class="oa">🧘</div><h4>Jessica 心靈瑜珈<small>官方帳號</small></h4><span class="ai-chip">AI 預約客服</span></div>
+          <div class="chat">
+            <span class="time">今天 14:02</span>
+            <div class="msg me">
+              <div class="read">已讀<br>14:02</div>
+              <div class="bub" style="position:relative"><span class="marker" style="left:-34px;top:-6px">1</span>老師請問一對一私人瑜珈一堂多少？我有腰傷可以上嗎？</div>
+            </div>
+            <div class="msg">
+              <div class="av">🧘</div>
+              <div>
+                <div class="name">AI 智能小幫手</div>
+                <div class="bub" style="position:relative"><span class="marker" style="right:-12px;top:-10px">2</span>您好！一對一私人瑜珈單堂費用為 <span class="price">NT$2,000</span>／60 分鐘。<br>關於腰傷部分，我們課程會依學員狀況進行動作調整與保護。</div>
+              </div>
+            </div>
+            <div class="msg">
+              <div class="av" style="visibility:hidden"></div>
+              <div class="flex" style="position:relative">
+                <span class="marker" style="right:-12px;top:-10px">3</span>
+                <div class="flex-hero"><span class="lotus">🪷</span><div><b>請選擇您想了解的服務</b><small>或直接進行預約</small></div></div>
+                <div class="flex-body">
+                  <div class="btns">
+                    <button class="fbtn primary" onclick="goStep(2)"><i>📅</i>一對一預約專區</button>
+                    <button class="fbtn" onclick="toast('開啟：課程介紹與價格')"><i>💡</i>課程介紹與價格</button>
+                    <button class="fbtn" onclick="toast('開啟：上課地點與須知')"><i>📍</i>上課地點與須知</button>
+                    <button class="fbtn" onclick="toast('轉接 Jessica 老師（真人）')"><i>👩‍🏫</i>聯絡 Jessica 老師</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="input">＋ 📷 <div class="box">輸入訊息</div> 🎤</div>
+          <div class="rich"><div><i>📅</i>預約</div><div><i>💡</i>課程</div><div><i>📍</i>地點</div><div><i>👩‍🏫</i>老師</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">➔</div>
+
+    <!-- ===== Step 2 ===== -->
+    <div class="step">
+      <div class="step-label"><span class="num">2</span> 一對一預約：選擇時段</div>
+      <div class="phone" id="p2">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>14:03</span><span>●●● 📶 🔋</span></div>
+          <div class="header"><span class="back">‹</span><div class="oa">🧘</div><h4>Jessica 心靈瑜珈<small>官方帳號</small></h4><span class="ai-chip">AI 預約客服</span></div>
+          <div class="chat">
+            <div class="msg me"><div class="read">已讀<br>14:03</div><div class="bub">📅 一對一預約專區</div></div>
+            <div class="msg">
+              <div class="av">🧘</div>
+              <div><div class="name">AI 智能小幫手</div><div class="bub">請選擇您想預約的時段 👇</div></div>
+            </div>
+            <div class="msg">
+              <div class="av" style="visibility:hidden"></div>
+              <div class="flex" style="position:relative">
+                <span class="marker" style="right:-12px;top:-10px">4</span>
+                <div class="flex-body" style="padding-top:14px">
+                  <p style="color:var(--ink);font-weight:700;font-size:13px">一對一私人瑜珈 · 60 分鐘 · NT$2,000</p>
+                  <div class="days" id="days">
+                    <div class="day">一<b>24</b></div><div class="day">二<b>25</b></div><div class="day on">三<b>26</b></div><div class="day">四<b>27</b></div>
+                  </div>
+                  <div class="slots" id="slots">
+                    <div class="slot" data-t="10:00"><div><b>10:00</b> <small>上午</small></div><span class="tag">可預約</span></div>
+                    <div class="slot on" data-t="14:00"><div><b>14:00</b> <small>下午</small></div><span class="tag">可預約</span></div>
+                    <div class="slot full" data-t="19:30"><div><b>19:30</b> <small>晚上</small></div><span class="tag">已額滿</span></div>
+                  </div>
+                  <button class="cta" style="position:relative" onclick="book()"><span class="marker" style="left:-12px;top:-10px">5</span>選擇此時段</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="input">＋ 📷 <div class="box">輸入訊息</div> 🎤</div>
+          <div class="rich"><div><i>📅</i>預約</div><div><i>💡</i>課程</div><div><i>📍</i>地點</div><div><i>👩‍🏫</i>老師</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">➔</div>
+
+    <!-- ===== Step 3 ===== -->
+    <div class="step">
+      <div class="step-label"><span class="num">3</span> 預約成功＋同步行事曆</div>
+      <div class="phone" id="p3">
+        <div class="screen">
+          <div class="island"></div>
+          <div class="status"><span>14:03</span><span>●●● 📶 🔋</span></div>
+          <div class="header"><span class="back">‹</span><div class="oa">🧘</div><h4>Jessica 心靈瑜珈<small>官方帳號</small></h4><span class="ai-chip">AI 預約客服</span></div>
+          <div class="chat" id="chat3">
+            <div class="msg me"><div class="read">已讀<br>14:03</div><div class="bub" id="pickedMsg">✅ 選擇 11/26（三）14:00</div></div>
+            <div class="msg" id="typing" style="display:none"><div class="av">🧘</div><div class="bub"><span class="typing"><span></span><span></span><span></span></span></div></div>
+            <div class="msg" id="okMsg">
+              <div class="av">🧘</div>
+              <div class="flex" style="position:relative">
+                <span class="marker" style="right:-12px;top:-10px">6</span>
+                <div class="ok-head"><div class="check">✓</div><div><b>預約成功！</b><small>我們已為您保留時段</small></div></div>
+                <div class="flex-body">
+                  <div class="kv"><span>課程</span><b>一對一私人瑜珈</b></div>
+                  <div class="kv"><span>時間</span><b id="okTime">11/26（三）14:00–15:00</b></div>
+                  <div class="kv"><span>老師</span><b>Jessica</b></div>
+                  <div class="kv"><span>費用</span><b class="price">NT$2,000</b></div>
+                  <div class="sync">🗓 已同步至 Jessica 老師行事曆</div>
+                  <div class="tip">💬 課前請告知老師腰傷部位與狀況，老師會為您調整動作。</div>
+                  <div class="row2"><button class="ghost" onclick="toast('已加入您的手機行事曆')">加入我的行事曆</button><button class="ghost" onclick="toast('開啟：更改／取消預約')">更改／取消</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="input">＋ 📷 <div class="box">輸入訊息</div> 🎤</div>
+          <div class="rich"><div><i>📅</i>預約</div><div><i>💡</i>課程</div><div><i>📍</i>地點</div><div><i>👩‍🏫</i>老師</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <aside class="notes">
+    <h4>畫面說明</h4>
+    <div class="row"><span class="pin">1</span><div><b>學員提問</b>：同時問價格＋身體狀況，AI 需拆成兩個意圖回覆。</div></div>
+    <div class="row"><span class="pin">2</span><div><b>AI 回覆</b>：價格由後台課程資料帶入；健康問題用固定安全話術。</div></div>
+    <div class="row"><span class="pin">3</span><div><b>服務選單（Flex Message）</b>：2×2 按鈕，「一對一預約專區」為主要 CTA。</div></div>
+    <div class="row"><span class="pin">4</span><div><b>時段選擇</b>：讀取老師行事曆空檔，已額滿時段置灰不可點。</div></div>
+    <div class="row"><span class="pin">5</span><div><b>確認按鈕</b>：送出後鎖定時段，防重複點擊。</div></div>
+    <div class="row"><span class="pin">6</span><div><b>預約成功卡</b>：寫入老師行事曆，提供加入行事曆與更改／取消。</div></div>
+    <div class="sec">
+      <b>Design Tokens</b><br>
+      <span class="sw" style="background:#6F8F72"></span>主色 鼠尾草綠 #6F8F72<br>
+      <span class="sw" style="background:#C9826B"></span>強調 陶土橘 #C9826B<br>
+      <span class="sw" style="background:#F6F1EA"></span>按鈕底 #F6F1EA<br>
+      <span class="sw" style="background:#A6E57A"></span>學員泡泡 #A6E57A<br>
+      卡片圓角 16px／按鈕 12px・膠囊 999px<br>
+      字級 15／14／12px · Noto Sans TC
+    </div>
+    <div class="sec warn">
+      <b>⚠ 待確認</b><br>
+      ・腰傷等健康問題：AI 是否一律加「請先告知老師或諮詢醫師」？<br>
+      ・時段日期為示意，需串接老師實際行事曆<br>
+      ・取消／改期規則與期限
+    </div>
+    <div class="sec"><b>互動</b>：點 ① 的「一對一預約專區」→ ② 選日期與時段 → 「選擇此時段」→ ③ 成功卡更新</div>
+  </aside>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const wd=['日','一','二','三','四','五','六'];
+let day='26', time='14:00';
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1800)}
+function focusPhone(n){document.querySelectorAll('.phone').forEach(p=>p.classList.remove('focus'));const p=document.getElementById('p'+n);p.classList.add('focus');p.scrollIntoView({behavior:'smooth',block:'center',inline:'center'})}
+function goStep(n){focusPhone(n)}
+document.querySelectorAll('#days .day').forEach(d=>d.addEventListener('click',()=>{
+  document.querySelectorAll('#days .day').forEach(x=>x.classList.remove('on'));d.classList.add('on');day=d.querySelector('b').textContent;
+}));
+document.querySelectorAll('#slots .slot').forEach(s=>s.addEventListener('click',()=>{
+  if(s.classList.contains('full')){toast('此時段已額滿，請選擇其他時段');return}
+  document.querySelectorAll('#slots .slot').forEach(x=>x.classList.remove('on'));s.classList.add('on');time=s.dataset.t;
+}));
+let locked=false;
+function book(){
+  if(locked)return;locked=true;
+  const label=['24','25','26','27'].indexOf(day);const w=['一','二','三','四'][label];
+  const [h,m]=time.split(':');const end=(+h+1)+':'+m;
+  document.getElementById('pickedMsg').textContent=`✅ 選擇 11/${day}（${w}）${time}`;
+  document.getElementById('okTime').textContent=`11/${day}（${w}）${time}–${end}`;
+  document.getElementById('okMsg').style.display='none';
+  document.getElementById('typing').style.display='flex';
+  focusPhone(3);
+  setTimeout(()=>{document.getElementById('typing').style.display='none';document.getElementById('okMsg').style.display='flex';toast('預約成功！已同步至 Jessica 老師行事曆');locked=false},1100);
+}
+document.getElementById('replay').addEventListener('click',()=>{focusPhone(1);setTimeout(()=>focusPhone(2),1200);setTimeout(book,2400)});
+let anno=true;
+document.getElementById('annoBtn').addEventListener('click',e=>{anno=!anno;document.querySelectorAll('.marker').forEach(m=>m.style.display=anno?'':'none');e.target.textContent='標註：'+(anno?'開':'關')});
+</script>
+</body>
+</html>
